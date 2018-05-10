@@ -10,6 +10,7 @@ class CanviiApp {
         this.adjustCanvasSize();
         window.addEventListener('resize', this.adjustCanvasSize.bind(this));
         this.addMouseHandlers();
+        this.addKeyHandlers();
         window.setStrokeColor = color => this.strokeColor = color;
         window.setLineWidth = lineWidth => this.lineWidth = lineWidth;
     }
@@ -43,6 +44,16 @@ class CanviiApp {
                 this.currentLine++;
                 this.draw();
             } 
+        });
+    }
+
+    addKeyHandlers() {
+        document.addEventListener('keypress', ({charCode, ctrlKey}) => {
+            if (ctrlKey && charCode === 26 && this.lines.length) {
+                this.lines.pop();
+                this.currentLine--;
+                this.draw();
+            }
         });
     }
 
