@@ -8,6 +8,7 @@ class CanviiApp {
         this.strokeColor = 'magenta';
         this.lineWidth = 1;
         this.drawMode = true;
+        this.selection = {};
         this.adjustCanvasSize();
         window.addEventListener('resize', this.adjustCanvasSize.bind(this));
         this.addMouseHandlers();
@@ -23,6 +24,7 @@ class CanviiApp {
         this.canvasWidth = canvasWidth;
         this.canvas.height = canvasHeight;
         this.canvasHeight = canvasHeight;
+        this.draw();
     }
 
     addMouseHandlers() {
@@ -45,16 +47,18 @@ class CanviiApp {
             const y = offsetY;
 
             if (!this.drawMode) {
-                const closest = this.lines.reduce((min, line, index) => {
+                this.selection = this.lines.reduce((min, line, index) => {
                     const distance = line.distanceFromPoint(x, y);
                     if (distance <= 10 && distance < min.distance) {
                         return {distance, index};
                     }
                     return min;
                 }, {distance: Infinity, index: null});
-                console.log(closest);
+                this.lines.forEach((line, i) => line.toggleSelected(i === this.selection.index));
+                this.draw();
             } else if (this.lastMouseCoord) {
                 this.lines[this.currentLine].addSegment(this.lastMouseCoord.concat([x, y]));
+                this.lines[this.currentLine].finish();
                 this.lastMouseCoord = null;
                 this.currentLine++;
                 this.draw();
@@ -64,6 +68,7 @@ class CanviiApp {
         selectTool.addEventListener('click', () => {
             this.drawMode = !this.drawMode;
             selectTool.textContent = !this.drawMode ? 'draw' : 'select';
+            this.selection = null;
         });
     }
 
