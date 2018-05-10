@@ -55,6 +55,16 @@ class CanviiApp {
                 this.draw();
             }
         });
+        this.lineWidthIn = document.querySelector('.js-line-width input');
+        this.lineWidthIn.addEventListener('input', ({currentTarget}) => {
+            this.lineWidth = parseInt(currentTarget.value);
+        });
+        this.lineWidthIn.value = this.lineWidth;
+        this.colorIn = document.querySelector('.js-color input');
+        this.colorIn.addEventListener('input', ({currentTarget}) => {
+            this.strokeColor = currentTarget.value;
+        });
+        this.colorIn.value = this.strokeColor;
     }
 
     draw() {
