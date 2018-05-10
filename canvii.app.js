@@ -81,12 +81,14 @@ class CanviiApp {
             }
         });
         document.addEventListener('keydown', ({code}) => {
-            const length = this.lines.length;
-            this.lines = this.lines.filter((l, i) => i !== this.selection.index);
-            if (length !== this.lines.length) {
-                this.selection.index = -1;
-                this.currentLine--;
-                this.draw();
+            if (code === 'Delete') {
+                const length = this.lines.length;
+                this.lines = this.lines.filter((l, i) => i !== this.selection.index);
+                if (length !== this.lines.length) {
+                    this.selection.index = -1;
+                    this.currentLine--;
+                    this.draw();
+                }
             }
         });
         const lineWidthIn = document.querySelector('.js-line-width input');
