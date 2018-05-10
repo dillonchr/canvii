@@ -64,12 +64,14 @@ class CanviiApp {
                 this.draw();
             }
         });
-        const selectTool = document.querySelector('.js-select-tool');
-        selectTool.addEventListener('click', () => {
-            this.drawMode = !this.drawMode;
-            selectTool.textContent = !this.drawMode ? 'draw' : 'select';
-            this.selection = null;
-        });
+        this.selectTool = document.querySelector('.js-select-tool');
+        this.selectTool.addEventListener('click', this.toggleDrawMode.bind(this));
+    }
+
+    toggleDrawMode(forceDrawMode) {
+        this.drawMode = forceDrawMode || !this.drawMode;
+        this.selectTool.textContent = !this.drawMode ? 'draw' : 'select';
+        this.selection = {};
     }
 
     addKeyHandlers() {
@@ -89,6 +91,10 @@ class CanviiApp {
                     this.currentLine--;
                     this.draw();
                 }
+            } else if (code === 'KeyD' && !this.drawMode) {
+                this.toggleDrawMode(true);
+            } else if (code === 'KeyS' && this.drawMode) {
+                this.toggleDrawMode();
             }
         });
         const lineWidthIn = document.querySelector('.js-line-width input');
