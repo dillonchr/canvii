@@ -80,6 +80,15 @@ class CanviiApp {
                 this.draw();
             }
         });
+        document.addEventListener('keydown', ({code}) => {
+            const length = this.lines.length;
+            this.lines = this.lines.filter((l, i) => i !== this.selection.index);
+            if (length !== this.lines.length) {
+                this.selection.index = -1;
+                this.currentLine--;
+                this.draw();
+            }
+        });
         const lineWidthIn = document.querySelector('.js-line-width input');
         lineWidthIn.addEventListener('input', ({currentTarget}) => {
             this.lineWidth = parseInt(currentTarget.value);
