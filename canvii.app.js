@@ -1,7 +1,7 @@
 class CanviiApp {
-    constructor(canvas) {
-        this.canvas = canvas;
-        this.context = canvas.getContext('2d');
+    constructor() {
+        this.canvas = document.querySelector('.canvii-app__canvas');
+        this.context = this.canvas.getContext('2d');
         this.lastMouseCoord = null;
         this.lines = [];
         this.currentLine = 0;
@@ -119,4 +119,4 @@ class CanviiApp {
     }
 }
 
-new CanviiApp(document.querySelector('.canvii-app__canvas'));
+new CanviiApp();
