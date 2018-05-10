@@ -7,6 +7,7 @@ class CanviiApp {
         this.currentLine = 0;
         this.strokeColor = 'magenta';
         this.lineWidth = 1;
+        this.drawMode = true;
         this.adjustCanvasSize();
         window.addEventListener('resize', this.adjustCanvasSize.bind(this));
         this.addMouseHandlers();
@@ -26,11 +27,13 @@ class CanviiApp {
 
     addMouseHandlers() {
         this.canvas.addEventListener('mousedown', ({offsetX, offsetY}) => {
-            this.lastMouseCoord = [offsetX, offsetY];
-            this.lines.push(new Line(this.strokeColor, this.lineWidth));
+            if (this.drawMode) {
+                this.lastMouseCoord = [offsetX, offsetY];
+                this.lines.push(new Line(this.strokeColor, this.lineWidth));
+            }
         });
         this.canvas.addEventListener('mousemove', ({offsetX, offsetY}) => {
-            if (this.lastMouseCoord) {
+            if (this.drawMode && this.lastMouseCoord) {
                 const coords = [offsetX, offsetY];
                 this.lines[this.currentLine].addSegment(this.lastMouseCoord.concat(coords));
                 this.lastMouseCoord = coords;
@@ -38,12 +41,17 @@ class CanviiApp {
             }
         });
         this.canvas.addEventListener('mouseup', ({offsetX, offsetY}) => {
-            if (this.lastMouseCoord) {
+            if (this.drawMode && this.lastMouseCoord) {
                 this.lines[this.currentLine].addSegment(this.lastMouseCoord.concat([offsetX, offsetY]));
                 this.lastMouseCoord = null;
                 this.currentLine++;
                 this.draw();
             } 
+        });
+        const selectTool = document.querySelector('.js-select-tool');
+        selectTool.addEventListener('click', () => {
+            this.drawMode = !this.drawMode;
+            selectTool.textContent = !this.drawMode ? 'draw' : 'select';
         });
     }
 
@@ -55,16 +63,16 @@ class CanviiApp {
                 this.draw();
             }
         });
-        this.lineWidthIn = document.querySelector('.js-line-width input');
-        this.lineWidthIn.addEventListener('input', ({currentTarget}) => {
+        const lineWidthIn = document.querySelector('.js-line-width input');
+        lineWidthIn.addEventListener('input', ({currentTarget}) => {
             this.lineWidth = parseInt(currentTarget.value);
         });
-        this.lineWidthIn.value = this.lineWidth;
-        this.colorIn = document.querySelector('.js-color input');
-        this.colorIn.addEventListener('input', ({currentTarget}) => {
+        lineWidthIn.value = this.lineWidth;
+        const colorIn = document.querySelector('.js-color input');
+        colorIn.addEventListener('input', ({currentTarget}) => {
             this.strokeColor = currentTarget.value;
         });
-        this.colorIn.value = this.strokeColor;
+        colorIn.value = this.strokeColor;
     }
 
     draw() {
