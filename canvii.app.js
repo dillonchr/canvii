@@ -41,12 +41,24 @@ class CanviiApp {
             }
         });
         this.canvas.addEventListener('mouseup', ({offsetX, offsetY}) => {
-            if (this.drawMode && this.lastMouseCoord) {
-                this.lines[this.currentLine].addSegment(this.lastMouseCoord.concat([offsetX, offsetY]));
+            const x = offsetX;
+            const y = offsetY;
+
+            if (!this.drawMode) {
+                const closest = this.lines.reduce((min, line, index) => {
+                    const distance = line.distanceFromPoint(x, y);
+                    if (distance <= 10 && distance < min.distance) {
+                        return {distance, index};
+                    }
+                    return min;
+                }, {distance: Infinity, index: null});
+                console.log(closest);
+            } else if (this.lastMouseCoord) {
+                this.lines[this.currentLine].addSegment(this.lastMouseCoord.concat([x, y]));
                 this.lastMouseCoord = null;
                 this.currentLine++;
                 this.draw();
-            } 
+            }
         });
         const selectTool = document.querySelector('.js-select-tool');
         selectTool.addEventListener('click', () => {
